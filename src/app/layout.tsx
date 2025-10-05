@@ -3,12 +3,14 @@ import { Inter } from 'next/font/google';
 import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 import { cn } from '@/lib/utils';
+import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
   title: 'Rupee Riches - A Clicker Quest',
   description: 'Click your way to riches in this thrilling Rupee-themed game!',
+  manifest: '/manifest.json',
 };
 
 export default function RootLayout({
@@ -19,7 +21,6 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="manifest" href="/manifest.json" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
         <link
@@ -28,6 +29,7 @@ export default function RootLayout({
         />
       </head>
       <body className={cn('min-h-screen bg-background font-body antialiased', inter.variable)}>
+        <ServiceWorkerRegistration />
         {children}
         <Toaster />
         <footer className="text-center text-sm text-muted-foreground p-4">

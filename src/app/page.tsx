@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Coins, Wallet } from 'lucide-react';
+import { Wallet } from 'lucide-react';
 import { useGameState } from '@/hooks/use-game-state';
 import { OnboardingModal } from '@/components/game/OnboardingModal';
 import { RupeeCoin } from '@/components/game/RupeeCoin';
@@ -37,8 +37,8 @@ export default function Home() {
       ))}
 
       <div className="w-full max-w-sm">
-        <Link href="/wallet">
-          <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-card/80 backdrop-blur-sm shadow-lg transition-all hover:shadow-xl hover:scale-105 cursor-pointer border">
+        <Link href="/wallet" className="cursor-pointer">
+          <div className="flex items-center justify-between gap-4 p-4 rounded-xl bg-card/80 backdrop-blur-sm shadow-lg transition-all hover:shadow-xl hover:scale-105 border">
             <div className="flex items-center gap-4">
               <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent shadow-inner">
                 <Wallet className="w-6 h-6 text-primary-foreground" />

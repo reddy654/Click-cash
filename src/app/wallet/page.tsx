@@ -23,12 +23,12 @@ export default function WalletPage() {
     <main className="flex min-h-[calc(100vh-52px)] flex-col items-center p-4">
        <div className="w-full max-w-2xl mx-auto">
         <div className="relative mb-8 text-center">
-            <Link href="/" passHref className="absolute left-0 top-1/2 -translate-y-1/2">
-                <Button variant="ghost" size="icon">
+            <Button asChild variant="ghost" size="icon" className="absolute left-0 top-1/2 -translate-y-1/2">
+                <Link href="/">
                     <ArrowLeft className="h-6 w-6" />
                     <span className="sr-only">Back to game</span>
-                </Button>
-            </Link>
+                </Link>
+            </Button>
             <h1 className="text-3xl font-bold">Your Wallet</h1>
         </div>
 

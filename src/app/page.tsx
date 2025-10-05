@@ -43,12 +43,12 @@ export default function Home() {
       ))}
 
       <div className="absolute top-4 left-4">
-        <Link href="/wallet" passHref>
-          <Button variant="ghost" size="icon">
+        <Button asChild variant="ghost" size="icon">
+          <Link href="/wallet">
             <Wallet className="h-6 w-6" />
             <span className="sr-only">Open Wallet</span>
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
 
       <div className="absolute top-4 right-4 flex items-center gap-4">

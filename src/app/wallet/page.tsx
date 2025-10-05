@@ -2,20 +2,25 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { ArrowLeft, Coins, Wallet, X, Sparkles } from 'lucide-react';
+import { ChevronsRight, Wallet, X, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useGameState } from '@/hooks/use-game-state';
 import { Progress } from '@/components/ui/progress';
-import { CASHOUT_AMOUNT } from '@/lib/constants';
+import { CASHOUT_AMOUNT, MULTIPLIER_MAX_LEVEL } from '@/lib/constants';
+import { UpgradeItem } from '@/components/game/UpgradeItem';
 
 export default function WalletPage() {
-  const { state } = useGameState();
-  const { rupees, totalClicks = 0 } = state;
+  const { state, actions } = useGameState();
+  const { rupees, totalClicks = 0, upgrades } = state;
+  const { buyUpgrade } = actions;
+
 
   const progress = Math.min((rupees / CASHOUT_AMOUNT) * 100, 100);
   const remainingForCashout = CASHOUT_AMOUNT - rupees;
   const canCashout = rupees >= CASHOUT_AMOUNT;
+  const isMultiplierMaxed = upgrades.multiplier.level >= MULTIPLIER_MAX_LEVEL;
+
 
   return (
     <main className="flex min-h-[calc(100vh-52px)] flex-col items-center p-4 bg-background">
@@ -44,6 +49,24 @@ export default function WalletPage() {
                     <Sparkles className="h-6 w-6 text-yellow-300" />
                 </div>
             </CardContent>
+        </Card>
+
+        <Card className="mb-6">
+          <CardHeader>
+            <CardTitle>Upgrades</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <UpgradeItem
+              icon={ChevronsRight}
+              name="Multiplier"
+              description={isMultiplierMaxed ? 'Max level reached!' : '+1 Rupee per click'}
+              level={upgrades.multiplier.level}
+              cost={upgrades.multiplier.cost}
+              onBuy={() => buyUpgrade('multiplier', 'Multiplier')}
+              disabled={rupees < upgrades.multiplier.cost || isMultiplierMaxed}
+              isPurchased={isMultiplierMaxed}
+            />
+          </CardContent>
         </Card>
 
         <div className="space-y-4 mb-6">

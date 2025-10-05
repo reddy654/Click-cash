@@ -13,11 +13,7 @@ import {z} from 'genkit';
 
 const AnimatedProgressAlertsInputSchema = z.object({
   totalRupees: z.number().describe('The total number of rupees the player has.'),
-  autoClickerLevel: z.number().describe('The level of the auto clicker upgrade.'),
   multiplierLevel: z.number().describe('The level of the multiplier upgrade.'),
-  doubleRupeesPurchased: z
-    .boolean()
-    .describe('Whether the double rupees upgrade has been purchased.'),
 });
 export type AnimatedProgressAlertsInput = z.infer<
   typeof AnimatedProgressAlertsInputSchema
@@ -50,9 +46,7 @@ const animatedProgressAlertsPrompt = ai.definePrompt({
 Consider the following game state:
 
 Total Rupees: {{{totalRupees}}}
-Auto Clicker Level: {{{autoClickerLevel}}}
 Multiplier Level: {{{multiplierLevel}}}
-Double Rupees Purchased: {{{doubleRupeesPurchased}}}
 
 Based on this information, determine a suitable progressAlert message to display to the user to make the game more engaging. Also, decide whether to trigger the Rupee animation based on significant progress or upgrade purchases.
 

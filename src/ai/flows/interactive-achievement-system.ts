@@ -13,11 +13,7 @@ import {z} from 'genkit';
 
 const InteractiveAchievementSystemInputSchema = z.object({
   totalRupees: z.number().describe('The total number of rupees the player has.'),
-  autoClickerLevel: z.number().describe('The level of the auto clicker upgrade.'),
   multiplierLevel: z.number().describe('The level of the multiplier upgrade.'),
-  doubleRupeesPurchased: z
-    .boolean()
-    .describe('Whether the double rupees upgrade has been purchased.'),
   lastClickRupees: z.number().describe('The number of rupees earned from the last click.'),
 });
 export type InteractiveAchievementSystemInput = z.infer<
@@ -48,9 +44,7 @@ const interactiveAchievementSystemPrompt = ai.definePrompt({
 Consider the following game state:
 
 Total Rupees: {{{totalRupees}}}
-Auto Clicker Level: {{{autoClickerLevel}}}
 Multiplier Level: {{{multiplierLevel}}}
-Double Rupees Purchased: {{{doubleRupeesPurchased}}}
 Last Click Rupees: {{{lastClickRupees}}}
 
 Base the decision on whether to trigger the Rupee animation based on significant progress, upgrade purchases, or a large number of rupees earned from the last click.

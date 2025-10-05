@@ -4,9 +4,7 @@ export interface Upgrade {
 }
 
 export interface UpgradesState {
-  autoClicker: Upgrade & { rate: number };
   multiplier: Upgrade;
-  doubleRupees: Upgrade & { purchased: boolean };
 }
 
 export interface PlayerState {

@@ -59,35 +59,15 @@ export default function Home() {
             <Coins className="h-10 w-10 text-primary" />
             <span>{Math.floor(rupees).toLocaleString()}</span>
           </h1>
-          <p className="text-sm text-muted-foreground">
-            {upgrades.autoClicker.level > 0 &&
-              `+${
-                upgrades.autoClicker.level *
-                upgrades.autoClicker.rate *
-                (upgrades.doubleRupees.purchased ? 2 : 1)
-              } per second`}
-          </p>
         </div>
 
-        <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="md:col-span-1 flex flex-col gap-6 order-2 md:order-1">
             <Card>
               <CardHeader>
                 <CardTitle className="text-xl">Upgrades</CardTitle>
               </CardHeader>
               <CardContent className="flex flex-col gap-4">
-                <UpgradeItem
-                  icon={Zap}
-                  name="Auto Clicker"
-                  description={`+${
-                    upgrades.autoClicker.rate *
-                    (upgrades.doubleRupees.purchased ? 2 : 1)
-                  } RPS per level`}
-                  level={upgrades.autoClicker.level}
-                  cost={upgrades.autoClicker.cost}
-                  onBuy={() => buyUpgrade('autoClicker')}
-                  disabled={rupees < upgrades.autoClicker.cost}
-                />
                 <UpgradeItem
                   icon={ChevronsRight}
                   name="Multiplier"
@@ -97,29 +77,12 @@ export default function Home() {
                   onBuy={() => buyUpgrade('multiplier')}
                   disabled={rupees < upgrades.multiplier.cost}
                 />
-                <UpgradeItem
-                  icon={Gem}
-                  name="Double Rupees"
-                  description="Doubles all income!"
-                  level={upgrades.doubleRupees.purchased ? 1 : 0}
-                  cost={upgrades.doubleRupees.cost}
-                  onBuy={() => buyUpgrade('doubleRupees')}
-                  disabled={rupees < upgrades.doubleRupees.cost || upgrades.doubleRupees.purchased}
-                  isPurchased={upgrades.doubleRupees.purchased}
-                />
               </CardContent>
             </Card>
           </div>
 
           <div className="md:col-span-1 flex items-center justify-center order-1 md:order-2">
             <RupeeCoin onClick={rupeeClick} />
-          </div>
-
-          <div className="md:col-span-1 flex flex-col gap-6 order-3 md:order-3">
-            <WalletPanel
-              rupees={rupees}
-              onCashout={actions.cashOut}
-            />
           </div>
         </div>
       </div>

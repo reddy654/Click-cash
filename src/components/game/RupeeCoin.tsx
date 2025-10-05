@@ -16,10 +16,10 @@ export function RupeeCoin({ onClick }: RupeeCoinProps) {
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <radialGradient id="gold-gradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-            <stop offset="0%" style={{ stopColor: '#FFF7B0' }} />
-            <stop offset="50%" style={{ stopColor: '#FFD700' }} />
-            <stop offset="100%" style={{ stopColor: '#C4A600' }} />
+          <radialGradient id="coin-gradient" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+            <stop offset="0%" stopColor="hsl(var(--primary) / 0.8)" />
+            <stop offset="50%" stopColor="hsl(var(--primary))" />
+            <stop offset="100%" stopColor="hsl(var(--primary) / 0.7)" />
           </radialGradient>
           <filter id="glow">
             <feGaussianBlur stdDeviation="3.5" result="coloredBlur" />
@@ -30,9 +30,9 @@ export function RupeeCoin({ onClick }: RupeeCoinProps) {
           </filter>
         </defs>
         <g className="transition-transform duration-200 group-hover:scale-105" style={{ filter: 'url(#glow)' }}>
-          <circle cx="60" cy="60" r="50" fill="url(#gold-gradient)" />
-          <circle cx="60" cy="60" r="50" stroke="#A38A00" strokeWidth="3" fill="none" />
-          <circle cx="60" cy="60" r="45" stroke="#A38A00" strokeWidth="1" fill="none" />
+          <circle cx="60" cy="60" r="50" fill="url(#coin-gradient)" />
+          <circle cx="60" cy="60" r="50" stroke="hsl(var(--primary-foreground) / 0.5)" strokeWidth="3" fill="none" />
+          <circle cx="60" cy="60" r="45" stroke="hsl(var(--primary-foreground) / 0.5)" strokeWidth="1" fill="none" />
           <text
             x="50%"
             y="50%"
@@ -40,7 +40,7 @@ export function RupeeCoin({ onClick }: RupeeCoinProps) {
             textAnchor="middle"
             fontSize="60"
             fontWeight="bold"
-            fill="#614a00"
+            fill="hsl(var(--primary-foreground))"
             className="select-none"
           >
             ₹

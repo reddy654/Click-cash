@@ -13,6 +13,7 @@ import { FlyingRupees } from '@/components/game/FlyingRupees';
 import { SoundToggle } from '@/components/game/SoundToggle';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { MULTIPLIER_MAX_LEVEL } from '@/lib/constants';
 
 export default function Home() {
   const { state, actions, animations } = useGameState();
@@ -24,6 +25,8 @@ export default function Home() {
   const { rupees, upgrades, player } = state;
   const { rupeeClick, buyUpgrade } = actions;
   const { clickAnimations, showRupeeAnimation } = animations;
+
+  const isMultiplierMaxed = upgrades.multiplier.level >= MULTIPLIER_MAX_LEVEL;
 
   return (
     <main className="flex min-h-[calc(100vh-52px)] flex-col items-center justify-center p-4 overflow-hidden relative">
@@ -71,11 +74,12 @@ export default function Home() {
                 <UpgradeItem
                   icon={ChevronsRight}
                   name="Multiplier"
-                  description="+1 Rupee per click"
+                  description={isMultiplierMaxed ? 'Max level reached!' : '+1 Rupee per click'}
                   level={upgrades.multiplier.level}
                   cost={upgrades.multiplier.cost}
-                  onBuy={() => buyUpgrade('multiplier')}
-                  disabled={rupees < upgrades.multiplier.cost}
+                  onBuy={() => buyUpgrade('multiplier', 'Multiplier')}
+                  disabled={rupees < upgrades.multiplier.cost || isMultiplierMaxed}
+                  isPurchased={isMultiplierMaxed}
                 />
               </CardContent>
             </Card>

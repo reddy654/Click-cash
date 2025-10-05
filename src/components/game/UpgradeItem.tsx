@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { MULTIPLIER_MAX_LEVEL } from '@/lib/constants';
 
 interface UpgradeItemProps {
   icon: React.ElementType;
@@ -24,6 +25,8 @@ export function UpgradeItem({
   disabled,
   isPurchased,
 }: UpgradeItemProps) {
+  const isMaxLevel = name === 'Multiplier' && level >= MULTIPLIER_MAX_LEVEL;
+
   return (
     <div className="flex items-center gap-4 p-2 rounded-lg transition-colors hover:bg-secondary/50">
       <div className="bg-secondary p-3 rounded-lg">
@@ -32,13 +35,15 @@ export function UpgradeItem({
       <div className="flex-1">
         <h3 className="font-semibold flex items-center gap-2">
           {name}
-          {level > 0 && <Badge variant="secondary">Lvl {level}</Badge>}
+          {level > 0 && <Badge variant={isMaxLevel ? 'default' : 'secondary'}>{isMaxLevel ? `Max Lvl` : `Lvl ${level}`}</Badge>}
         </h3>
         <p className="text-sm text-muted-foreground">{description}</p>
       </div>
       <div>
         {isPurchased ? (
-          <Badge variant="default" className="bg-green-500">Purchased</Badge>
+           <Button onClick={onBuy} disabled={true} size="sm">
+             Max Level
+           </Button>
         ) : (
           <Button onClick={onBuy} disabled={disabled} size="sm">
             ₹{Math.ceil(cost).toLocaleString()}

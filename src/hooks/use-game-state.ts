@@ -12,6 +12,7 @@ import {
   CASHOUT_AMOUNT,
   MULTIPLIER_BASE_COST,
   COST_INCREASE_FACTOR,
+  MULTIPLIER_MAX_LEVEL,
 } from '@/lib/constants';
 import { playClickSound, playUpgradeSound, playCashoutSound } from '@/lib/sounds';
 import { analyzeProgressAndDisplayAlerts } from '@/ai/flows/animated-progress-alerts';
@@ -181,6 +182,9 @@ export const useGameState = () => {
 
   const buyUpgrade = useCallback((upgrade: keyof UpgradesState, name: string) => {
     const currentUpgrade = state.upgrades[upgrade];
+    if (upgrade === 'multiplier' && currentUpgrade.level >= MULTIPLIER_MAX_LEVEL) {
+      return; // Max level reached
+    }
     if (state.rupees >= currentUpgrade.cost) {
       dispatch({ type: 'BUY_UPGRADE', payload: { upgrade, cost: currentUpgrade.cost, name } });
       playUpgradeSound();

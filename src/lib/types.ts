@@ -25,6 +25,7 @@ export interface GameState {
   upgrades: UpgradesState;
   player: PlayerState | null;
   transactions: Transaction[];
+  totalClicks: number;
 }
 
 export type ClickAnimation = {

@@ -34,6 +34,7 @@ const initialState: GameState = {
   upgrades: initialUpgrades,
   player: null,
   transactions: [],
+  totalClicks: 0,
 };
 
 const MAX_TRANSACTIONS = 20;
@@ -57,6 +58,7 @@ function gameReducer(state: GameState, action: Action): GameState {
       // This is a simplified version. In a real app, you'd want to merge state
       // more carefully, especially with versioning.
       return {
+        ...initialState, // Start with defaults
         ...action.payload,
         upgrades: { // Ensure upgrades are not malformed from old state
           multiplier: action.payload.upgrades.multiplier || initialUpgrades.multiplier,
@@ -64,7 +66,7 @@ function gameReducer(state: GameState, action: Action): GameState {
       };
     case 'CLICK_RUPEE':
       // Clicks can be too frequent to log, so we don't add a transaction here.
-      return { ...state, rupees: state.rupees + action.payload };
+      return { ...state, rupees: state.rupees + action.payload, totalClicks: state.totalClicks + 1 };
     case 'BUY_UPGRADE': {
       const { upgrade, cost, name } = action.payload;
       const newUpgrades = { ...state.upgrades };
@@ -111,6 +113,9 @@ export const useGameState = () => {
           // ensure transactions is an array
           if (!Array.isArray(parsedState.transactions)) {
             parsedState.transactions = [];
+          }
+          if (typeof parsedState.totalClicks !== 'number') {
+            parsedState.totalClicks = 0;
           }
           dispatch({ type: 'SET_STATE', payload: parsedState });
         }

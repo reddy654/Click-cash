@@ -6,6 +6,7 @@ import {
   UpgradesState,
   PlayerState,
   ClickAnimation,
+  Transaction
 } from '@/lib/types';
 import {
   CASHOUT_AMOUNT,
@@ -23,12 +24,12 @@ type Action =
   | { type: 'SET_STATE'; payload: GameState }
   | { type: 'CLICK_RUPEE'; payload: number }
   | { type: 'AUTO_CLICK'; payload: number }
-  | { type: 'BUY_UPGRADE'; payload: { upgrade: keyof UpgradesState; cost: number } }
+  | { type: 'BUY_UPGRADE'; payload: { upgrade: keyof UpgradesState; cost: number; name: string } }
   | { type: 'SET_PLAYER'; payload: PlayerState }
   | { type: 'CASHOUT' };
 
 const initialUpgrades: UpgradesState = {
-  autoClicker: { level: 0, cost: AUTO_CLICKER_BASE_COST },
+  autoClicker: { level: 0, cost: AUTO_CLICKER_BASE_COST, rate: AUTO_CLICKER_RATE },
   multiplier: { level: 1, cost: MULTIPLIER_BASE_COST },
   doubleRupees: { level: 0, cost: DOUBLE_RUPEES_BASE_COST, purchased: false },
 };
@@ -37,20 +38,40 @@ const initialState: GameState = {
   rupees: 0,
   upgrades: initialUpgrades,
   player: null,
+  transactions: [],
 };
 
+const MAX_TRANSACTIONS = 20;
+
 function gameReducer(state: GameState, action: Action): GameState {
+  let newTransactions = [...state.transactions];
+
+  const addTransaction = (type: Transaction['type'], description: string, amount: number) => {
+    const newTx: Transaction = {
+      id: `${Date.now()}-${Math.random()}`,
+      type,
+      description,
+      amount,
+      timestamp: Date.now(),
+    };
+    newTransactions = [newTx, ...newTransactions].slice(0, MAX_TRANSACTIONS);
+  }
+
   switch (action.type) {
     case 'SET_STATE':
       return action.payload;
     case 'CLICK_RUPEE':
+      // Clicks can be too frequent to log, so we don't add a transaction here.
       return { ...state, rupees: state.rupees + action.payload };
     case 'AUTO_CLICK':
-      return { ...state, rupees: state.rupees + action.payload };
+       addTransaction('autoclick', 'Auto-clicker income', action.payload);
+      return { ...state, rupees: state.rupees + action.payload, transactions: newTransactions };
     case 'BUY_UPGRADE': {
-      const { upgrade, cost } = action.payload;
+      const { upgrade, cost, name } = action.payload;
       const newUpgrades = { ...state.upgrades };
       const currentUpgrade = newUpgrades[upgrade];
+      
+      addTransaction('upgrade', `Purchased ${name}`, -cost);
 
       if (upgrade === 'doubleRupees') {
         (newUpgrades.doubleRupees as UpgradesState['doubleRupees']).purchased = true;
@@ -63,12 +84,14 @@ function gameReducer(state: GameState, action: Action): GameState {
         ...state,
         rupees: state.rupees - cost,
         upgrades: newUpgrades,
+        transactions: newTransactions
       };
     }
     case 'SET_PLAYER':
       return { ...state, player: action.payload };
     case 'CASHOUT':
-      return { ...state, rupees: state.rupees - CASHOUT_AMOUNT };
+      addTransaction('cashout', `Cashed out`, -CASHOUT_AMOUNT);
+      return { ...state, rupees: state.rupees - CASHOUT_AMOUNT, transactions: newTransactions };
     default:
       return state;
   }
@@ -90,6 +113,10 @@ export const useGameState = () => {
         const parsedState = JSON.parse(savedState);
         // Basic validation to prevent loading corrupted state
         if (parsedState.rupees !== undefined && parsedState.upgrades && parsedState.player) {
+          // ensure transactions is an array
+          if (!Array.isArray(parsedState.transactions)) {
+            parsedState.transactions = [];
+          }
           dispatch({ type: 'SET_STATE', payload: parsedState });
         }
       }
@@ -178,14 +205,14 @@ export const useGameState = () => {
     setClickAnimations(current => current.filter(anim => anim.id !== id));
   }, []);
 
-  const buyUpgrade = useCallback((upgrade: keyof UpgradesState) => {
-    const currentUpgrade = state.upgrades[upgrade];
+  const buyUpgrade = useCallback((upgrade: keyof Omit<UpgradesState, 'autoClicker' | 'multiplier' | 'doubleRupees'>, name: string) => {
+    const currentUpgrade = state.upgrades[upgrade as keyof UpgradesState];
     if (state.rupees >= currentUpgrade.cost) {
-      dispatch({ type: 'BUY_UPGRADE', payload: { upgrade, cost: currentUpgrade.cost } });
+      dispatch({ type: 'BUY_UPGRADE', payload: { upgrade: upgrade as keyof UpgradesState, cost: currentUpgrade.cost, name } });
       playUpgradeSound();
       handleAIProgressCheck();
     }
-  }, [state.rupees, state.upgrades, handleAIProgressCheck]);
+}, [state.rupees, state.upgrades, handleAIProgressCheck]);
 
   const setPlayer = useCallback((player: PlayerState) => {
     dispatch({ type: 'SET_PLAYER', payload: player });
@@ -203,14 +230,23 @@ export const useGameState = () => {
     rate: AUTO_CLICKER_RATE
   }
 
+  const buyTypedUpgrade = useCallback((upgrade: keyof UpgradesState, name: string) => {
+    const currentUpgrade = state.upgrades[upgrade];
+    if (state.rupees >= currentUpgrade.cost) {
+      dispatch({ type: 'BUY_UPGRADE', payload: { upgrade, cost: currentUpgrade.cost, name } });
+      playUpgradeSound();
+      handleAIProgressCheck();
+    }
+}, [state.rupees, state.upgrades, handleAIProgressCheck]);
+
   return {
     state: {...state, upgrades: {...state.upgrades, autoClicker: autoClickerWithRate}},
     actions: useMemo(() => ({
       rupeeClick,
-      buyUpgrade,
+      buyUpgrade: buyTypedUpgrade,
       setPlayer,
       cashOut,
-    }), [rupeeClick, buyUpgrade, setPlayer, cashOut]),
+    }), [rupeeClick, buyTypedUpgrade, setPlayer, cashOut]),
     animations: useMemo(() => ({
       clickAnimations,
       removeClickAnimation,

@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { Coins, Zap, Gem, ChevronsRight, HelpCircle, X } from 'lucide-react';
+import { Coins, Zap, Gem, ChevronsRight, HelpCircle, X, Wallet } from 'lucide-react';
 import { useGameState } from '@/hooks/use-game-state';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { OnboardingModal } from '@/components/game/OnboardingModal';
@@ -11,6 +11,8 @@ import { UpgradeItem } from '@/components/game/UpgradeItem';
 import { PlusOneAnimation } from '@/components/game/PlusOneAnimation';
 import { FlyingRupees } from '@/components/game/FlyingRupees';
 import { SoundToggle } from '@/components/game/SoundToggle';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 export default function Home() {
   const { state, actions, animations } = useGameState();
@@ -37,6 +39,15 @@ export default function Home() {
         />
       ))}
 
+      <div className="absolute top-4 left-4">
+        <Link href="/wallet" passHref>
+          <Button variant="ghost" size="icon">
+            <Wallet className="h-6 w-6" />
+            <span className="sr-only">Open Wallet</span>
+          </Button>
+        </Link>
+      </div>
+
       <div className="absolute top-4 right-4 flex items-center gap-4">
         <SoundToggle />
       </div>
@@ -52,6 +63,7 @@ export default function Home() {
             {upgrades.autoClicker.level > 0 &&
               `+${
                 upgrades.autoClicker.level *
+                upgrades.autoClicker.rate *
                 (upgrades.doubleRupees.purchased ? 2 : 1)
               } per second`}
           </p>

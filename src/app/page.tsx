@@ -43,12 +43,20 @@ export default function Home() {
       ))}
 
       <div className="absolute top-4 left-4">
-        <Button asChild variant="ghost" size="icon">
-          <Link href="/wallet">
-            <Wallet className="h-6 w-6" />
-            <span className="sr-only">Open Wallet</span>
-          </Link>
-        </Button>
+        <Link href="/wallet">
+          <div className="flex items-center gap-4 p-2 rounded-lg bg-card/80 backdrop-blur-sm shadow-md transition-all hover:shadow-lg hover:scale-105 cursor-pointer">
+            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-primary to-accent shadow-inner">
+              <Wallet className="w-6 h-6 text-primary-foreground" />
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Your Wallet</p>
+              <p className="font-bold text-lg text-foreground">
+                ₹{Math.floor(rupees).toLocaleString()}
+              </p>
+            </div>
+            <p className="text-xs text-muted-foreground ml-4">Tap to view</p>
+          </div>
+        </Link>
       </div>
 
       <div className="absolute top-4 right-4 flex items-center gap-4">

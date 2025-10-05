@@ -176,7 +176,7 @@ export const useGameState = () => {
       id: Date.now() + Math.random(),
       x: event.clientX,
       y: event.clientY,
-      value: clickValue
+      value: clickValue,
     };
     setClickAnimations(current => [...current, newAnimation]);
   }, [clickValue]);

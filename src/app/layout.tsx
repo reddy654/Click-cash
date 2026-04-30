@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration';
+import Script from 'next/script'; // ← ADD THIS LINE
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -35,6 +36,13 @@ export default function RootLayout({
         <footer className="text-center text-sm text-muted-foreground p-4">
           Made with ❤️ in India — Rupee Clicker Quest
         </footer>
+
+        {/* ✅ Adsterra Ad Script */}
+        <Script
+          src="https://pl29296919.profitablecpmratenetwork.com/3c/b6/74/3cb674e2ccd05baa8e441dbbf69da911.js"
+          strategy="afterInteractive"
+        />
+
       </body>
     </html>
   );
